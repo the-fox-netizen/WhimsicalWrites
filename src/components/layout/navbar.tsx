@@ -4,6 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
+import { SearchBar } from './search-bar';
 
 export function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -17,16 +18,19 @@ export function Navbar() {
     <nav className="w-full bg-white border-b border-neutral-200 relative z-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20 items-center">
-          <Link href="/" className="flex items-center gap-1 text-[#756226]">
-            <Image 
-              src="/transparentblack.png" 
-              alt="WhimsicalWrites" 
-              width={180} 
-              height={36} 
-              className="h-10 w-auto object-contain"
-              priority
-            /> WhimsicalWrites
-          </Link>
+          <div className="flex justify-start items-center gap-2 sm:gap-4 flex-1">
+            <Link href="/" className="flex items-center gap-1 text-[#756226] shrink-0">
+              <Image 
+                src="/transparentblack.png" 
+                alt="WhimsicalWrites" 
+                width={180} 
+                height={36} 
+                className="h-8 sm:h-10 w-auto object-contain"
+                priority
+              />
+            </Link>
+            <SearchBar />
+          </div>
           
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center gap-8">
