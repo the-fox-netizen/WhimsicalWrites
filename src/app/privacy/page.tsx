@@ -1,4 +1,5 @@
 import { Metadata } from 'next';
+import Image from 'next/image';
 
 export const metadata: Metadata = {
   title: 'Privacy Policy',
@@ -9,6 +10,14 @@ export default function PrivacyPolicyPage() {
   return (
     <div className="min-h-screen pt-32 pb-20 px-6 bg-white">
       <div className="max-w-3xl mx-auto prose prose-neutral prose-headings:font-heading prose-headings:font-bold prose-headings:uppercase prose-a:underline-offset-4">
+        <div className="mb-12 w-full max-w-[400px] h-[80px] relative">
+          <Image 
+            src="/transparentnormal.png" 
+            alt="WhimsicalWrites Logo" 
+            fill
+            className="object-contain object-left"
+          />
+        </div>
         <h1>Privacy Policy</h1>
         <p>Last updated: {new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</p>
 

@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import { getAllCategories } from '@/features/posts/queries';
 
 export async function Footer() {
@@ -9,9 +10,15 @@ export async function Footer() {
     <footer className="w-full bg-neutral-950 text-white py-12 px-6 mt-auto border-t border-neutral-900">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12">
         <div className="max-w-xs">
-          <h2 className="font-heading font-black text-2xl tracking-tighter uppercase mb-4">
-            Whimsicalwrites
-          </h2>
+          <div className="mb-6">
+            <Image 
+              src="/transparentwhite.png" 
+              alt="WhimsicalWrites" 
+              width={180} 
+              height={36} 
+              className="h-10 w-auto object-contain"
+            />
+          </div>
           <p className="text-neutral-400 text-sm font-medium leading-relaxed mb-6">
             A multi-niche publication for careers, tech, finance, and building businesses.
           </p>

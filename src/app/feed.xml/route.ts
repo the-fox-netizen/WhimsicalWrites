@@ -34,7 +34,7 @@ export async function GET() {
   <channel>
     <title>WhimsicalWrites</title>
     <link>${siteUrl}</link>
-    <description>An editorial exploration of modern design, architecture thoughts, and whimsical engineering moments.</description>
+    <description>A curated, multi-niche publication exploring the intersections of careers, tech tools, personal finance, and building businesses.</description>
     <language>en</language>
 ${itemsXml}
   </channel>

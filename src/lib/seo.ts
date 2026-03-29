@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 
 const siteConfig = {
   name: 'Whimsicalwrites',
-  description: 'An editorial exploration of modern design, architecture thoughts, and whimsical engineering moments.',
+  description: 'A curated, multi-niche publication exploring the intersections of careers, tech tools, personal finance, and building businesses.',
   url: 'https://whimsicalwrites.com',
 };
 
@@ -62,5 +62,10 @@ export function constructMetadata({
         follow: false,
       },
     }),
+    icons: {
+      icon: '/transparentnormal.png',
+      shortcut: '/transparentnormal.png',
+      apple: '/transparentnormal.png',
+    },
   };
 }

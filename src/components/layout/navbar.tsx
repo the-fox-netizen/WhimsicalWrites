@@ -1,6 +1,7 @@
 'use client';
 
 import Link from 'next/link';
+import Image from 'next/image';
 import { useState } from 'react';
 import { Menu, X } from 'lucide-react';
 
@@ -16,10 +17,15 @@ export function Navbar() {
     <nav className="w-full bg-white border-b border-neutral-200 relative z-50">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between h-20 items-center">
-          <Link href="/" className="flex items-center gap-2">
-            <span className="font-heading font-black text-2xl tracking-tighter uppercase text-neutral-950">
-              Whimsicalwrites
-            </span>
+          <Link href="/" className="flex items-center gap-1 text-[#756226]">
+            <Image 
+              src="/transparentblack.png" 
+              alt="WhimsicalWrites" 
+              width={180} 
+              height={36} 
+              className="h-10 w-auto object-contain"
+              priority
+            /> WhimsicalWrites
           </Link>
           
           {/* Desktop Nav */}

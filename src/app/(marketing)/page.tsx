@@ -1,6 +1,7 @@
 import { getPostsByCategory, getAllCategories } from '@/features/posts/queries';
 import { PostCard } from '@/components/blog/post-card';
 import Link from 'next/link';
+import Image from 'next/image';
 
 export const revalidate = 60;
 
@@ -48,7 +49,16 @@ export default async function MarketingPage() {
       {/* Hero Section */}
       <section className="pt-32 pb-24 px-6 border-b border-neutral-200 bg-neutral-50 text-center">
         <div className="max-w-4xl mx-auto flex flex-col items-center">
-          <h1 className="text-4xl sm:text-6xl md:text-8xl font-black font-heading leading-none tracking-tighter uppercase text-neutral-950 mb-6 break-words overflow-hidden">
+          <div className="mb-6 w-full max-w-[600px] h-[100px] md:h-[200px] relative">
+            <Image 
+              src="/transparentnormal.png" 
+              alt="WhimsicalWrites" 
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
+          <h1 className="sr-only">
             WhimsicalWrites
           </h1>
           <p className="text-base sm:text-xl md:text-2xl text-neutral-600 font-medium leading-relaxed max-w-2xl px-2">
