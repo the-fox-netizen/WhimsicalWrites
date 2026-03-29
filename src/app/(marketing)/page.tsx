@@ -1,4 +1,4 @@
-import { getPostsByCategory } from '@/features/posts/queries';
+import { getPostsByCategory, getAllCategories } from '@/features/posts/queries';
 import { PostCard } from '@/components/blog/post-card';
 import Link from 'next/link';
 
@@ -9,18 +9,22 @@ export const metadata = {
   description: 'A confident, clean, and multi-niche publication covering insights on careers, tech tools, personal finance, and building businesses.',
 };
 
-const CATEGORIES = [
-  { id: 'careers', name: 'Careers', description: 'Career Advice, Job Tips & Hiring Guides', link: '/careers' },
-  { id: 'tech', name: 'Tech', description: 'Tech News, Tools & Developer Guides', link: '/tech' },
-  { id: 'finance', name: 'Finance', description: 'Personal Finance, Salary & Money Tips', link: '/finance' },
-  { id: 'business', name: 'Business', description: 'Business, Startups & Monetization', link: '/business' },
-];
+
 
 export default async function MarketingPage() {
+  const categories = await getAllCategories();
+
   const categoryPosts = await Promise.all(
-    CATEGORIES.map(async (cat) => {
-      const posts = await getPostsByCategory(cat.id, 3);
-      return { ...cat, posts };
+    categories.map(async (cat) => {
+      const posts = await getPostsByCategory(cat, 3);
+      const name = cat.charAt(0).toUpperCase() + cat.slice(1);
+      return { 
+        id: cat, 
+        name, 
+        description: `Explore our latest articles in ${name}`, 
+        link: `/${cat}`, 
+        posts 
+      };
     })
   );
 
@@ -44,10 +48,10 @@ export default async function MarketingPage() {
       {/* Hero Section */}
       <section className="pt-32 pb-24 px-6 border-b border-neutral-200 bg-neutral-50 text-center">
         <div className="max-w-4xl mx-auto flex flex-col items-center">
-          <h1 className="text-6xl md:text-8xl font-black font-heading leading-none tracking-tighter uppercase text-neutral-950 mb-6">
+          <h1 className="text-4xl sm:text-6xl md:text-8xl font-black font-heading leading-none tracking-tighter uppercase text-neutral-950 mb-6 break-words overflow-hidden">
             WhimsicalWrites
           </h1>
-          <p className="text-xl md:text-3xl text-neutral-600 font-medium leading-relaxed max-w-2xl">
+          <p className="text-base sm:text-xl md:text-2xl text-neutral-600 font-medium leading-relaxed max-w-2xl px-2">
             A curated publication exploring the intersections of careers, tech, finance, and business.
           </p>
         </div>
@@ -79,7 +83,7 @@ export default async function MarketingPage() {
                 </Link>
               </div>
 
-              <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 min-[500px]:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8">
                 {category.posts.map((post) => (
                   <PostCard key={post.id} post={post} index={1} /> 
                 ))}

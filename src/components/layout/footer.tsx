@@ -1,6 +1,10 @@
 import Link from 'next/link';
+import { getAllCategories } from '@/features/posts/queries';
 
-export function Footer() {
+export async function Footer() {
+  const categories = await getAllCategories();
+  const topCategories = categories.slice(0, 5);
+  
   return (
     <footer className="w-full bg-neutral-950 text-white py-12 px-6 mt-auto border-t border-neutral-900">
       <div className="max-w-6xl mx-auto flex flex-col md:flex-row justify-between items-start gap-12">
@@ -22,10 +26,11 @@ export function Footer() {
               Categories
             </h3>
             <div className="flex flex-col gap-4">
-              <Link href="/careers" className="text-sm font-bold uppercase tracking-widest hover:text-[#b0d12a] transition-colors">Careers</Link>
-              <Link href="/tech" className="text-sm font-bold uppercase tracking-widest hover:text-[#b0d12a] transition-colors">Tech</Link>
-              <Link href="/finance" className="text-sm font-bold uppercase tracking-widest hover:text-[#b0d12a] transition-colors">Finance</Link>
-              <Link href="/business" className="text-sm font-bold uppercase tracking-widest hover:text-[#b0d12a] transition-colors">Business</Link>
+              {topCategories.map((cat) => (
+                <Link key={cat} href={`/${cat}`} className="text-sm font-bold uppercase tracking-widest hover:text-[#b0d12a] transition-colors">
+                  {cat}
+                </Link>
+              ))}
             </div>
           </div>
 
@@ -36,7 +41,6 @@ export function Footer() {
             <div className="flex flex-col gap-4">
               <Link href="/about" className="text-sm font-bold uppercase tracking-widest hover:text-[#b0d12a] transition-colors">About</Link>
               <Link href="/privacy" className="text-sm font-bold uppercase tracking-widest hover:text-[#b0d12a] transition-colors">Privacy</Link>
-              <Link href="/posts" className="text-sm font-bold uppercase tracking-widest hover:text-[#b0d12a] transition-colors">Archive</Link>
               <a href="/feed.xml" className="text-sm font-bold uppercase tracking-widest hover:text-[#b0d12a] transition-colors">RSS</a>
             </div>
           </div>

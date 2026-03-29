@@ -34,8 +34,8 @@ export function PostCard({ post, index }: PostCardProps) {
       transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1], delay: (index % 3) * 0.1 }}
       className={`group flex flex-col h-full bg-white border border-neutral-200 overflow-hidden hover:border-neutral-950 transition-colors ${isFeatured ? 'lg:col-span-2 lg:flex-row' : ''}`}
     >
-      <Link href={`/posts/${post.slug}`} className="flex flex-col lg:flex-row w-full h-full">
-        <div className={`relative w-full bg-neutral-50 flex items-center justify-center p-8 transition-colors group-hover:bg-[#eaf5b1] overflow-hidden border-b lg:border-b-0 ${isFeatured ? 'lg:border-r border-neutral-200 lg:w-1/2 min-h-[400px]' : 'aspect-square lg:aspect-[4/3]'}`}>
+      <Link href={`/${categoryKey}/${post.slug}`} className="flex flex-col lg:flex-row w-full h-full">
+        <div className={`relative w-full bg-neutral-50 flex items-center justify-center p-4 sm:p-8 transition-colors group-hover:bg-[#eaf5b1] overflow-hidden border-b lg:border-b-0 ${isFeatured ? 'lg:border-r border-neutral-200 lg:w-1/2 min-h-[320px] sm:min-h-[400px]' : 'aspect-[4/3]'}`}>
           {post.cover_image ? (
             <Image 
               src={post.cover_image} 
@@ -45,14 +45,14 @@ export function PostCard({ post, index }: PostCardProps) {
               sizes={isFeatured ? "(max-width: 1024px) 100vw, 50vw" : "(max-width: 768px) 100vw, 33vw"}
             />
           ) : (
-            <span className={`z-10 relative font-heading font-black text-neutral-300 group-hover:text-neutral-900 transition-colors uppercase text-center break-words max-w-full leading-none ${isFeatured ? 'text-5xl md:text-7xl' : 'text-3xl'}`}>
+            <span className={`z-10 relative font-heading font-black text-neutral-300 group-hover:text-neutral-900 transition-colors uppercase text-center break-words w-full leading-tight px-2 ${isFeatured ? 'text-3xl sm:text-5xl md:text-7xl' : 'text-xl sm:text-2xl'}`}>
               {post.title}
             </span>
           )}
         </div>
         
-        <div className={`flex flex-col flex-1 p-8 ${isFeatured ? 'lg:w-1/2' : ''}`}>
-          <div className="flex items-center justify-between text-xs font-bold uppercase tracking-widest text-neutral-500 mb-6">
+        <div className={`flex flex-col flex-1 p-4 sm:p-8 ${isFeatured ? 'lg:w-1/2' : ''}`}>
+          <div className="flex flex-wrap items-center gap-2 text-xs font-bold uppercase tracking-widest text-neutral-500 mb-4 sm:mb-6">
             <span 
               role="button"
               tabIndex={0}
@@ -68,20 +68,20 @@ export function PostCard({ post, index }: PostCardProps) {
                   router.push(`/${categoryKey}`);
                 }
               }}
-              className={`${badgeColor} px-3 py-1 hover:opacity-80 transition-opacity cursor-pointer relative z-10`}
+              className={`${badgeColor} px-2 py-0.5 hover:opacity-80 transition-opacity cursor-pointer relative z-10 truncate max-w-[120px]`}
             >
               {post.category || 'General'}
             </span>
-            <span>
+            <span className="ml-auto shrink-0">
               {new Date(post.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' })}
             </span>
           </div>
           
-          <h2 className={`font-bold font-heading uppercase leading-[1.1] text-neutral-950 mb-6 group-hover:underline decoration-4 underline-offset-4 ${isFeatured ? 'text-4xl md:text-5xl' : 'text-2xl'}`}>
+          <h2 className={`font-bold font-heading uppercase leading-tight text-neutral-950 mb-4 sm:mb-6 group-hover:underline decoration-4 underline-offset-4 break-words ${isFeatured ? 'text-2xl sm:text-4xl md:text-5xl' : 'text-lg sm:text-xl'}`}>
             {post.title}
           </h2>
           
-          <p className={`text-neutral-600 mb-8 font-medium ${isFeatured ? 'text-lg line-clamp-4' : 'line-clamp-3'}`}>
+          <p className={`text-neutral-600 mb-6 sm:mb-8 font-medium text-sm sm:text-base ${isFeatured ? 'line-clamp-4' : 'line-clamp-3'}`}>
             {post.excerpt}
           </p>
           

@@ -1,4 +1,3 @@
-export type Category = 'careers' | 'tech' | 'finance' | 'business' | 'general';
 
 export interface Post {
   id: string;

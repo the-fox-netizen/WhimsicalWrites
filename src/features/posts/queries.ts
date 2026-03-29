@@ -104,41 +104,49 @@ export async function getFeaturedPostsByCategory(category: string, limit?: numbe
   return data || [];
 }
 
-export async function getCategoryLandingData(category: string) {
-  const { data: featuredData } = await supabase
-    .from('posts')
-    .select('id, title, slug, excerpt, content, cover_image, published, author_id, created_at, updated_at, views, read_time_minutes, tags, meta_title, meta_description, og_image, published_at, featured, category')
-    .eq('published', true)
-    .eq('category', category)
-    .eq('featured', true)
-    .order('published_at', { ascending: false })
-    .limit(1);
+const POSTS_PER_PAGE = 6;
 
-  const featuredPost = featuredData && featuredData.length > 0 ? featuredData[0] : null;
+const SELECT_FIELDS = 'id, title, slug, excerpt, content, cover_image, published, author_id, created_at, updated_at, views, read_time_minutes, tags, meta_title, meta_description, og_image, published_at, featured, category';
 
-  let recentQuery = supabase
-    .from('posts')
-    .select('id, title, slug, excerpt, content, cover_image, published, author_id, created_at, updated_at, views, read_time_minutes, tags, meta_title, meta_description, og_image, published_at, featured, category')
-    .eq('published', true)
-    .eq('category', category)
-    .order('published_at', { ascending: false });
-
-  if (featuredPost) {
-    recentQuery = recentQuery.neq('id', featuredPost.id);
-  }
-  
-  const { data: recentData } = await recentQuery.limit(6);
-
-  const { count } = await supabase
+export async function getCategoryLandingData(category: string, page: number = 1) {
+  // ── 1. Guaranteed total count (separate query, never null) ──────────────
+  const { count: totalCount } = await supabase
     .from('posts')
     .select('*', { count: 'exact', head: true })
     .eq('published', true)
     .eq('category', category);
 
+  const total = totalCount ?? 0;
+  const totalPages = Math.ceil(total / POSTS_PER_PAGE);
+
+  // ── 2. Paginated posts: featured=true first, then by views desc ─────────
+  const from = (page - 1) * POSTS_PER_PAGE;
+  const to   = from + POSTS_PER_PAGE - 1;
+
+  const { data: gridData } = await supabase
+    .from('posts')
+    .select(SELECT_FIELDS)
+    .eq('published', true)
+    .eq('category', category)
+    .order('featured', { ascending: false }) // pinned posts float to top
+    .order('views',    { ascending: false }) // then by engagement
+    .range(from, to);
+
+  // ── 3. Resolve the "featured post" for the hero slot (page 1 only) ──────
+  // The first item in the grid IS the featured/top post — pull it out so the
+  // category page can render it prominently, and keep remaining as the grid.
+  const allRows    = (gridData ?? []) as Post[];
+  const featuredPost = page === 1 && allRows.length > 0 && allRows[0].featured
+    ? allRows[0]
+    : null;
+  const recentPosts = featuredPost ? allRows.slice(1) : allRows;
+
   return {
-    featuredPost: featuredPost as Post | null,
-    recentPosts: (recentData || []) as Post[],
-    totalCount: count || 0
+    featuredPost,
+    recentPosts,
+    totalCount: total,
+    currentPage: page,
+    totalPages,
   };
 }
 
@@ -157,4 +165,25 @@ export async function getRelatedPosts(category: string, currentSlug: string, lim
     return [];
   }
   return data || [];
+}
+
+export async function getAllCategories(): Promise<string[]> {
+  const { data, error } = await supabase
+    .from('posts')
+    .select('category')
+    .eq('published', true);
+
+  if (error || !data) {
+    console.error('Error fetching categories:', error);
+    return [];
+  }
+
+  const categorySet = new Set<string>();
+  data.forEach((post) => {
+    if (post.category && typeof post.category === 'string') {
+      categorySet.add(post.category.toLowerCase().trim());
+    }
+  });
+  
+  return Array.from(categorySet);
 }

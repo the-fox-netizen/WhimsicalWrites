@@ -1,7 +1,7 @@
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowLeft, ArrowRight } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { ViewTracker } from '@/components/blog/view-tracker';
 import { getRelatedPosts } from '@/features/posts/queries';
@@ -11,7 +11,7 @@ import type { Metadata, ResolvingMetadata } from 'next';
 export const revalidate = 60;
 
 type Props = {
-  params: Promise<{ slug: string }>
+  params: Promise<{ category: string; slug: string }>
 }
 
 async function getPost(slug: string) {
@@ -65,7 +65,7 @@ export async function generateMetadata(
       images: [ogImage],
     },
     alternates: {
-      canonical: `${siteUrl}/posts/${post.slug}`,
+      canonical: `${siteUrl}/${params.category}/${post.slug}`,
     },
   };
 }
@@ -75,6 +75,12 @@ export default async function PostPage(props: Props) {
   const post = await getPost(params.slug);
 
   if (!post) {
+    return notFound();
+  }
+
+  const categoryKey = (post.category || 'general').toLowerCase();
+  
+  if (categoryKey !== params.category.toLowerCase()) {
     return notFound();
   }
 
@@ -97,7 +103,7 @@ export default async function PostPage(props: Props) {
       '@type': 'Person',
       name: 'Whimsicalwrites Editorial',
     },
-    url: `${siteUrl}/posts/${post.slug}`,
+    url: `${siteUrl}/${params.category}/${post.slug}`,
     publisher: {
       '@type': 'Organization',
       name: 'Whimsicalwrites',
@@ -109,7 +115,6 @@ export default async function PostPage(props: Props) {
   };
 
   const relatedPosts = await getRelatedPosts(post.category || 'general', post.slug, 3);
-  const categoryKey = (post.category || 'general').toLowerCase();
   const categoryName = post.category ? String(post.category).charAt(0).toUpperCase() + String(post.category).slice(1) : 'General';
   
   const categoryColors: Record<string, string> = {
@@ -204,7 +209,7 @@ export default async function PostPage(props: Props) {
               </Link>
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {relatedPosts.map((relatedPost, i) => (
+              {relatedPosts.map((relatedPost) => (
                 <PostCard key={relatedPost.id} post={relatedPost} index={1} />
               ))}
             </div>
